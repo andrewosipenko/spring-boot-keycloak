@@ -1,23 +1,44 @@
 server:
-  port: 7070
+  port: 8081
   servlet:
-    context-path: /management/v1
+    context-path: /
+  error:
+    whitelabel:
+      enabled: false
+      include-message: always
+      include-binding-errors: always
+      include-stacktrace: always
+      include-exception: always
 
 spring:
   main:
     allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: spring-boot-keycloak
+            authorization-grant-type: authorization_code
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/keycloak-realm
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/keycloak-realm
+  mvc:
+    view:
+      prefix: /WEB-INF/
+      suffix: .jsp
 
-
-keycloak:
-
-  realm: keycloak-realm
-  auth-server-url: http://localhost:8180/auth
-  # The client_id
-  resource: keycloak-example
-  public-client: true
-  # Configures what principal.getName() will return
-  principal-attribute: preferred_username
- 
-  
-
-    
+#keycloak:
+#
+#  realm: keycloak-realm
+#  auth-server-url: http://localhost:8180/auth
+#  # The client_id
+#  resource: keycloak-example
+#  public-client: true
+#  # Configures what principal.getName() will return
+#  principal-attribute: preferred_username

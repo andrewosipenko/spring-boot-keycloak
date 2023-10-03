@@ -1,38 +1,28 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Student;
+import com.example.demo.model.StudentDAO;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.model.Student;
-import com.example.demo.model.StudentDAO;
-
-import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
-
-import java.security.Principal;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-
-import org.keycloak.representations.AccessToken;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.access.prepost.PreAuthorize;
-
-@Slf4j
 @Controller
 public class WebController {
-	
-	@Autowired
-	AccessToken accessToken;
-	
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+//    @Autowired
+//    OAuth2AccessToken accessToken;
     @Autowired
     private StudentDAO studentDAO;
-    
+
 	@PostConstruct
 	// add students for demonstration
     public void addStudents() {
@@ -51,22 +41,24 @@ public class WebController {
         student2.setGrade("A");
         studentDAO.save(student2);
     }
-	
-    @RequestMapping(value = "/students", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String home() {
+        return "pages/home";
+    }
+
+    @RequestMapping(value = "/secure-portal/students", method = RequestMethod.GET)
     public @ResponseBody Iterable<Student> getStudents() {
-    	log.info("getStudents: Retreiving students from db by user : {}",accessToken.getPreferredUsername());
+//    	log.info("getStudents: Retreiving students from db by user : {}",accessToken.getTokenValue());
         Iterable<Student> students = studentDAO.findAll();
            return students;
     }
-    
 
-    @RequestMapping(value = "/students/{id}", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/secure-portal/students/{id}", method = RequestMethod.GET)
     public @ResponseBody Student getStudentById(@PathVariable("id") long id) {
-    	log.info("getStudentById: Retreiving student with id {} from db by user : {} ",id,accessToken.getPreferredUsername());
+//    	log.info("getStudentById: Retreiving student with id {} from db by user : {} ",id,accessToken.getTokenValue());
     	Optional<Student> student = studentDAO.findById(id);
         return student.get();
     }
-    
-   
-    
 }
