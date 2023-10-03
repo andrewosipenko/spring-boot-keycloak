@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.WebConstants;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentDAO;
 import jakarta.annotation.PostConstruct;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/secure-portal/students")
+@RequestMapping(WebConstants.URLs.SECURE_PORTAL + "/students")
 public class StudentPageController {
     @Resource
     private StudentDAO studentDAO;

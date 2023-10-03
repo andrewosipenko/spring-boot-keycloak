@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.WebConstants;
 import com.example.demo.security.KeycloakLogoutHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ class SecurityConfig {
     @Order(1)
     @Bean
     public SecurityFilterChain clientFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/secure-portal");
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath(WebConstants.URLs.SECURE_PORTAL);
 
         http.authorizeHttpRequests((authorize) ->
             authorize.requestMatchers(mvcMatcherBuilder.pattern("/students")).permitAll().anyRequest().authenticated()
