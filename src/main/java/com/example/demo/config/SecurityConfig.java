@@ -30,10 +30,14 @@ class SecurityConfig {
     @Order(1)
     @Bean
     public SecurityFilterChain clientFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath(WebConstants.URLs.SECURE_PORTAL);
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
         http.authorizeHttpRequests((authorize) ->
-            authorize.requestMatchers(mvcMatcherBuilder.pattern("/students")).permitAll().anyRequest().authenticated()
+            authorize
+                .requestMatchers(mvcMatcherBuilder.pattern("/secure-portal/students")).hasRole("STUDENT")
+                .requestMatchers(mvcMatcherBuilder.pattern("/secure-portal/teachers")).hasRole("TEACHER")
+                .requestMatchers(mvcMatcherBuilder.pattern("/secure-portal")).authenticated()
+                .anyRequest().permitAll()
         );
 
         http.oauth2Login()
